@@ -3,8 +3,7 @@ const Currency = require('./models/Currency');
 
 
 // milliseconds
-// const REFRESH_TIME = 5 * 60 * 1000;
-const REFRESH_TIME = 15 * 1000;
+const REFRESH_TIME = 5 * 60 * 1000;
 
 const runHandlers = () => {
   console.log(`Tick handlers at ${Date.now()}`);

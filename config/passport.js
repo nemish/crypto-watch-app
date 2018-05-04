@@ -42,7 +42,7 @@ passport.use(new LocalStrategy({ usernameField: 'name', passwordField: 'passwd' 
         return done(err);
     }
 
-    // if no user let's create it!
+    // if no user let's create it! Why not?
     if (!user) {
       user = new User({
           name: name.toLowerCase(), passwd

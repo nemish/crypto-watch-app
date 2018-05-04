@@ -59,5 +59,5 @@ class LoginForm extends Component {
 
 export default reduxForm({
   form: 'login',
-  validate,
+  validate
 })(LoginForm);

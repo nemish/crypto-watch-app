@@ -15,7 +15,10 @@ const UserSchema = new mongoose.Schema({
  */
 UserSchema.pre('save', function save(next) {
   const user = this;
-  if (!user.isModified('passwd')) { return next(); }
+  if (!user.isModified('passwd')) {
+    return next();
+  }
+
   bcrypt.genSalt(10, (err, salt) => {
     if (err) { return next(err); }
     bcrypt.hash(user.passwd, salt, null, (err, hash) => {
@@ -51,12 +54,13 @@ UserSchema.methods.trackCurrency = function (currencyId) {
     this.currencies.push(currencyId);
   }
   return this.save().then(() => {
-    console.log('after save', currencyId);
     return Currency.findById(currencyId, (err, cur) => {
+      console.log('cur.trackingByUsersCount', cur.code, cur.trackingByUsersCount)
       if (!cur.trackingByUsersCount) {
-        cur.trackingByUsersCount = 0
+        cur.trackingByUsersCount = 1
+      } else {
+        cur.trackingByUsersCount += 1;
       }
-      ++cur.trackingByUsersCount;
       return cur.save();
     });
   });
@@ -67,9 +71,7 @@ UserSchema.methods.untrackCurrency = function (currencyId) {
   return this.save().then(() => {
     return Currency.findById(currencyId, (err, cur) => {
       --cur.trackingByUsersCount;
-      console.log('Currency.findById', currencyId, cur.trackingByUsersCount);
       if (cur.trackingByUsersCount <= 0) {
-        console.log('In if Currency.findById', currencyId, cur.trackingByUsersCount);
         cur.remove();
       } else {
         cur.save()

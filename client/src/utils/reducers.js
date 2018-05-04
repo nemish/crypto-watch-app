@@ -29,22 +29,6 @@ export function createReducer(initialState, handlers) {
   return reducer;
 }
 
-
-export const createModalReducer = modalActions => {
-  return createReducer({
-    showWindow: false,
-    modalData: {}
-  }, {
-    [modalActions.actions.open](state, action) {
-      return {...state, showWindow: true, modalData: action.modalData}
-    },
-    [modalActions.actions.close](state, action) {
-      return {...state, showWindow: false, modalData: {}}
-    }
-  })
-}
-
-
 export const createFetchReducerCallbacks = (event, initialData, {dataProcessor, successProcessor, startProcessor, failProcessor}) => {
   let conf = event;
   if (typeof event === 'string') {

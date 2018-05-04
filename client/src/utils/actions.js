@@ -1,4 +1,3 @@
-import { SubmissionError } from 'redux-form';
 import { store } from '@/index';
 
 
@@ -106,69 +105,6 @@ export function createAsyncAction(conf) {
 }
 
 
-export function createGridLoader(conf) {
-    return createAsyncAction({
-        ...conf,
-        startEvent: conf.gridName + '__LOAD__START',
-        successEvent: conf.gridName + '__LOAD__SUCCESS',
-        failEvent: conf.gridName + '__LOAD__FAIL',
-    });
-}
-
-
-export const createGridActions = conf => ({
-    fetchItems: createGridLoader(conf),
-    handlePageChange: makeActionCreator(conf.gridName + '__PAGE_CHANGE', 'data'),
-    handleSortChange: makeActionCreator(conf.gridName + '__SORT_CHANGE', 'data'),
-    changeFilterEvent: conf.gridName + '__FILTERS_CHANGE',
-    updateDimensions: makeActionCreator(conf.gridName + '__DIMENSIONS_UPDATED', 'data')
-});
-
-
-export const createFormConstants = conf => ({
-    saveSuccessEvent: conf.formName + '__SAVE_SUCCESS',
-    changeFieldEvent: conf.formName + '__FIELD_CHANGE',
-    saveStartEvent: conf.formName + '__SUBMIT__START',
-    saveFailEvent: conf.formName + '__SAVE_FAIL',
-    addConditionEvent: conf.formName + '__ADD_CONDITION',
-    removeConditionEvent: conf.formName + '__REMOVE_CONDITION',
-    resetConditionsEvent: conf.formName + '__RESET_CONDITIONS'
-});
-
-
-export const modalConstants = modalName => ({
-    open: modalName + '__OPEN',
-    close: modalName + '__CLOSE'
-})
-
-
-export const createModalActions = (conf, name) => {
-    let constants = conf;
-    if (typeof constants === 'string') {
-        constants = modalConstants(constants);
-    }
-    return {
-        name,
-        open: makeActionCreator(constants.open, 'modalData'),
-        close: makeActionCreator(constants.close),
-        actions: constants
-    }
-}
-
-
-export const createFormActions = (formConf, conf) => {
-    return {
-        onFormSubmit: createAsyncAction({
-            ...conf,
-            startEvent: formConf.saveStartEvent,
-            successEvent: formConf.saveSuccessEvent,
-            failEvent: formConf.saveFailEvent
-        }),
-        fieldChange: makeActionCreator(formConf.changeFieldEvent, 'data')
-    }
-}
-
-
 export const createAsyncActionsConf = actionName => {
     return {
         actionName,
@@ -176,13 +112,4 @@ export const createAsyncActionsConf = actionName => {
         successEvent: actionName + '__SUCCESS',
         failEvent: actionName + '__FAIL',
     }
-}
-
-
-export const createFormDispatchActions = (formActions, dispatch) => {
-    let obj = {};
-    Object.keys(formActions).forEach(
-        key => obj[key] = data => dispatch(formActions[key](data))
-    )
-    return obj;
 }

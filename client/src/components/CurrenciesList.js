@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchCurrencies, untrackCurrency } from '@/actions/currencies';
+import moment from 'moment';
+
 
 const RemoveButton = props => <button
   disabled={props.isDeleting}
@@ -10,6 +12,7 @@ const RemoveButton = props => <button
   Remove
 </button>;
 
+
 const RemoveButtonConnected = connect(
   (state, ownProps) => {
     const { deletingItems } = state.currencies._meta;
@@ -17,6 +20,7 @@ const RemoveButtonConnected = connect(
   },
   dispatch => bindActionCreators({ untrackCurrency, fetchCurrencies }, dispatch)
 )(RemoveButton);
+
 
 const CurrencyRowHead = () => <div className='py-2 border-b-2 flex items-center font-bold'>
   <div className='flex-1'>Name</div>
@@ -27,23 +31,27 @@ const CurrencyRowHead = () => <div className='py-2 border-b-2 flex items-center 
   <div className='flex-1'></div>
 </div>;
 
+
 const CurrencyRow = ({item}) => <div className='py-2 border-b-2 flex items-center flex-wrap'>
   <div className='flex-1'>{item.name}</div>
   <div className='flex-1'>{item.code}</div>
   <div className='flex-1'>{item.prices && item.prices.EUR || 'n/a'}</div>
-  <div className='flex-1'>{item.lastUpdated || 'not updated'}</div>
+  <div className='flex-1 text-sm text-grey-dark' title={item.lastUpdated ? moment(item.lastUpdated).format('MMMM Do YYYY, h:mm:ss a') : ''}>
+    {item.lastUpdated ? moment(item.lastUpdated).fromNow() : 'not updated'}
+  </div>
   <div className='flex-1'>{item.trackingByUsersCount}</div>
   <div className='flex-1'>
     <RemoveButtonConnected item={item} />
   </div>
 </div>;
 
+
 class CurrenciesList extends Component {
   componentDidMount() {
     this.props.fetchCurrencies();
     setInterval(() => {
       this.props.fetchCurrencies();
-    }, 10000);
+    }, 5 * 60 * 1000);
   }
 
   render() {
@@ -56,6 +64,7 @@ class CurrenciesList extends Component {
     </div>
   }
 }
+
 
 export default connect(
   state => ({

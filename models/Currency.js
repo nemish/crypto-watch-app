@@ -8,7 +8,7 @@ const CurrencySchema = new mongoose.Schema({
   timestamp: { type: Date, default: Date.now },
   lastUpdated: { type: Date },
   prices: { type: Object },
-  trackingByUsersCount: { type: Number }
+  trackingByUsersCount: { type: Number, default: () => 0 }
 });
 
 module.exports = mongoose.model('Currency', CurrencySchema);

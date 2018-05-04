@@ -1,6 +1,7 @@
 const fetch = require('node-fetch')
 const Currency = require('../models/Currency');
 const User = require('../models/User');
+const { updatePrice } = require('../models/helpers');
 
 exports.fetchCurrencies = (req, res, next) => {
   Currency.find({_id: { $in: req.user.currencies }}, (err, currencies) => {
@@ -37,7 +38,7 @@ exports.trackCurrency = (req, res, next) => {
 
       newCur.save().then((created) => {
         user.trackCurrency(created._id).then(() => {
-          updatePrice(newCur);
+          return updatePrice(newCur);
         }).then(() => {
           res.json({status: 'added'});
         });
@@ -50,15 +51,14 @@ exports.trackCurrency = (req, res, next) => {
 exports.untrackCurrency = (req, res, next) => {
   const { currency_id } = req.body;
   const { user } = req;
-  console.log('untrackCurrency', currency_id);
   user.untrackCurrency(currency_id).then(() => {
     return res.json({status: 'deleted'});
   });
 }
 
+
 const API_URL = 'https://min-api.cryptocompare.com/';
 const COINS_LIST_API_URL = `${API_URL}data/all/coinlist`;
-
 
 exports.coinslist = (req, res, next) => {
   fetch(COINS_LIST_API_URL)

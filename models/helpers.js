@@ -3,7 +3,7 @@ const getUrl = ({from, to='EUR'}) => `https://min-api.cryptocompare.com/data/pri
 
 module.exports = {
   updatePrice: item => {
-    fetch(getUrl({from: item.code}))
+    return fetch(getUrl({from: item.code}))
       .then(res => {
         if (!res.ok) {
           console.log(`Update price fail for ${item.code}`)
@@ -21,7 +21,7 @@ module.exports = {
         }
         item.prices.EUR = data.EUR;
         item.lastUpdated = Date.now();
-        item.save().then(() => {
+        return item.save().then(() => {
           console.log(`Price updated for ${item.code}`)
         })
       });

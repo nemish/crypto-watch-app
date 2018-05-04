@@ -15,16 +15,16 @@ const LogoutButtonConnected = connect(null, dispatch => ({
 
 const Toolbar = props => {
   let userText = 'You are not logged in';
-  let buttons = <Link to='/login' className='tb-btn'>Login</Link>;
+  let elem = <Link to='/login' className='tb-btn'>Login</Link>;
   if (props.user._id) {
     userText = `Logged in as ${props.user.name}`;
-    buttons = <LogoutButtonConnected />
+    elem = <LogoutButtonConnected />
   }
   return <nav className='flex flex-wrap items-center justify-between bg-indigo p-3'>
     <div className='flex items-center flex-no-shrink text-white py-2'>
       <span className='font-semibold text-xl tracking-tight'>{userText}</span>
     </div>
-    {buttons}
+    {elem}
   </nav>
 }
 
